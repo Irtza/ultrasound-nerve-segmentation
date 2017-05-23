@@ -10,8 +10,7 @@ from skimage.io import imsave, imread
 
 data_path = '../splitdata/'
 
-# Original Dimensions of the images. Can't handle variable sized inputs
-
+# Original Dimensions of the images. 
 image_rows = 640
 image_cols = 640
 img_channels = 3
@@ -88,7 +87,7 @@ def create_test_data():
 
         # Load into Arrays
         imgs_id.append(image_name)
-        
+
         imgs[i] = img
         imgs_mask[i] = img_mask
 

@@ -1,3 +1,6 @@
+## Modified by github.com/irtza 
+## to Work with .png images and .png masks  on 3 channel TF ordered Data. 
+
 from __future__ import print_function
 
 import os
@@ -5,30 +8,38 @@ import numpy as np
 
 from skimage.io import imsave, imread
 
-data_path = 'raw/'
+data_path = '../splitdata/'
 
-image_rows = 420
-image_cols = 580
+# Original Dimensions of the images. Can't handle variable sized inputs
+
+image_rows = 640
+image_cols = 640
+img_channels = 3
+## Load Everything to Memory and Save as Numpy Arrays .npy. 
 
 
 def create_train_data():
-    train_data_path = os.path.join(data_path, 'train')
-    images = os.listdir(train_data_path)
-    total = len(images) / 2
+    '''
+        Load same file name images Simulataneuosly from Images and Mask folders. 
+        Save the Images to numpy for quick loading
+    '''
+    train_data_path = os.path.join(data_path, 'trainX/a')
+    train_label_path = os.path.join(data_path , 'trainY/a')
 
-    imgs = np.ndarray((total, image_rows, image_cols), dtype=np.uint8)
+    filelist = os.listdir(train_data_path)
+    total = len(filelist)
+
+    imgs      = np.ndarray((total, image_rows, image_cols , img_channels), dtype=np.uint8)
     imgs_mask = np.ndarray((total, image_rows, image_cols), dtype=np.uint8)
 
     i = 0
     print('-'*30)
     print('Creating training images...')
     print('-'*30)
-    for image_name in images:
-        if 'mask' in image_name:
-            continue
-        image_mask_name = image_name.split('.')[0] + '_mask.tif'
-        img = imread(os.path.join(train_data_path, image_name), as_grey=True)
-        img_mask = imread(os.path.join(train_data_path, image_mask_name), as_grey=True)
+
+    for image_name in filelist:
+        img      = imread(os.path.join(train_data_path, image_name), as_grey=False)  # rgb Collor Image
+        img_mask = imread(os.path.join(train_label_path, image_name), as_grey=True)
 
         img = np.array([img])
         img_mask = np.array([img_mask])
@@ -39,11 +50,61 @@ def create_train_data():
         if i % 100 == 0:
             print('Done: {0}/{1} images'.format(i, total))
         i += 1
-    print('Loading done.')
+
+    print('-'*30)
+    print('Verifying Shapes of the Arrays..')
+    print(imgs.shape , imgs_mask.shape)
+    print('-'*30)
 
     np.save('imgs_train.npy', imgs)
     np.save('imgs_mask_train.npy', imgs_mask)
     print('Saving to .npy files done.')
+
+
+
+def create_test_data():
+    test_data_path = os.path.join(data_path, 'testX/a')
+    test_label_path = os.path.join(data_path, 'testY/a')
+
+    filelist = os.listdir(test_data_path)
+    total = len(filelist)
+
+    imgs      = np.ndarray((total, image_rows, image_cols , img_channels), dtype=np.uint8)
+    imgs_mask = np.ndarray((total, image_rows, image_cols), dtype=np.uint8)
+    imgs_id =   []
+
+    i = 0
+    print('-'*30)
+    print('Creating test images...')
+    print('-'*30)
+
+    for image_name in filelist:
+
+        img = imread(os.path.join(test_data_path, image_name), as_grey=False)
+        img_mask = imread(os.path.join(test_label_path, image_name), as_grey=True)
+        
+        img = np.array([img])
+        img_mask = np.array([img_mask])
+
+        # Load into Arrays
+        imgs_id.append(image_name)
+        
+        imgs[i] = img
+        imgs_mask[i] = img_mask
+
+        if i % 100 == 0:
+            print('Done: {0}/{1} images'.format(i, total))
+        i += 1
+
+    print('Loading done.')
+
+    imgs_id = np.array(imgs_id)
+
+    np.save('imgs_test.npy', imgs)
+    np.save('imgs_id_test.npy', imgs_id)
+    np.save('imgs_mask_test_GT.npy', imgs_mask)
+    print('Saving to .npy files done.')
+
 
 
 def load_train_data():
@@ -51,43 +112,16 @@ def load_train_data():
     imgs_mask_train = np.load('imgs_mask_train.npy')
     return imgs_train, imgs_mask_train
 
-
-def create_test_data():
-    train_data_path = os.path.join(data_path, 'test')
-    images = os.listdir(train_data_path)
-    total = len(images)
-
-    imgs = np.ndarray((total, image_rows, image_cols), dtype=np.uint8)
-    imgs_id = np.ndarray((total, ), dtype=np.int32)
-
-    i = 0
-    print('-'*30)
-    print('Creating test images...')
-    print('-'*30)
-    for image_name in images:
-        img_id = int(image_name.split('.')[0])
-        img = imread(os.path.join(train_data_path, image_name), as_grey=True)
-
-        img = np.array([img])
-
-        imgs[i] = img
-        imgs_id[i] = img_id
-
-        if i % 100 == 0:
-            print('Done: {0}/{1} images'.format(i, total))
-        i += 1
-    print('Loading done.')
-
-    np.save('imgs_test.npy', imgs)
-    np.save('imgs_id_test.npy', imgs_id)
-    print('Saving to .npy files done.')
-
-
 def load_test_data():
     imgs_test = np.load('imgs_test.npy')
+    imgs_mask_test = np.load('imgs_mask_test.npy')
     imgs_id = np.load('imgs_id_test.npy')
-    return imgs_test, imgs_id
+    return imgs_test, imgs_id , imgs_mask_test
 
 if __name__ == '__main__':
     create_train_data()
     create_test_data()
+
+
+    print('-'*30)
+    print('Done ! ')

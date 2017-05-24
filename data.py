@@ -1,5 +1,5 @@
 ## Modified by github.com/irtza 
-## to Work with .png images and .png masks  on 3 channel TF ordered Data. 
+## to Work with .png images and .png masks  on 3 channel Tensorflow ordered Data. 
 
 from __future__ import print_function
 
@@ -22,8 +22,8 @@ def create_train_data():
         Load same file name images Simulataneuosly from Images and Mask folders. 
         Save the Images to numpy for quick loading
     '''
-    train_data_path = os.path.join(data_path, 'trainX/a')
-    train_label_path = os.path.join(data_path , 'trainY/a')
+    train_data_path = os.path.join(data_path, 'trainX')
+    train_label_path = os.path.join(data_path , 'trainY')
 
     filelist = os.listdir(train_data_path)
     total = len(filelist)
@@ -37,7 +37,7 @@ def create_train_data():
     print('-'*30)
 
     for image_name in filelist:
-        img      = imread(os.path.join(train_data_path, image_name), as_grey=False)  # rgb Collor Image
+        img      = imread(os.path.join(train_data_path, image_name), as_grey=False)[:,:,:3]  # rgb Collor Image
         img_mask = imread(os.path.join(train_label_path, image_name), as_grey=True)
 
         img = np.array([img])
@@ -62,8 +62,8 @@ def create_train_data():
 
 
 def create_test_data():
-    test_data_path = os.path.join(data_path, 'testX/a')
-    test_label_path = os.path.join(data_path, 'testY/a')
+    test_data_path = os.path.join(data_path, 'testX')
+    test_label_path = os.path.join(data_path, 'testY')
 
     filelist = os.listdir(test_data_path)
     total = len(filelist)
@@ -79,7 +79,7 @@ def create_test_data():
 
     for image_name in filelist:
 
-        img = imread(os.path.join(test_data_path, image_name), as_grey=False)
+        img = imread(os.path.join(test_data_path, image_name), as_grey=False)[:,:,:3]
         img_mask = imread(os.path.join(test_label_path, image_name), as_grey=True)
         
         img = np.array([img])

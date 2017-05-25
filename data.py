@@ -113,7 +113,9 @@ def load_train_data():
 
 def load_test_data():
     imgs_test = np.load('imgs_test.npy')
-    imgs_mask_test = np.load('imgs_mask_test.npy')
+    #imgs_mask_test = np.load('imgs_mask_test.npy')
+    imgs_mask_test = None
+
     imgs_id = np.load('imgs_id_test.npy')
     return imgs_test, imgs_id , imgs_mask_test
 

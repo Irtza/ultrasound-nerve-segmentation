@@ -120,6 +120,25 @@ def preprocess(imgs):
 
 
 def load_and_predict():
+    
+    print('-'*30)
+    print('Loading and preprocessing train data...For mean and Std only!')
+    print('-'*30)
+
+    imgs_train, imgs_mask_train = load_train_data()
+
+    ## Image Resizing
+    imgs_train = preprocess(imgs_train)
+    imgs_mask_train = preprocess(imgs_mask_train)
+
+    ## Network Preprocessing 
+    imgs_train = imgs_train.astype('float32')
+    mean = np.mean(imgs_train)  # mean for data centering
+    std = np.std(imgs_train)  # std for data normalization
+    print('Remember to Cache Mean and STD in production')
+
+
+
     print('-'*30)
     print('Loading and preprocessing train data...')
     print('-'*30)

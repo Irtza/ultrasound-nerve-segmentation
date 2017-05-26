@@ -187,11 +187,14 @@ def load_and_predict():
     if not os.path.exists(overlay_dir):
         os.mkdir(overlay_dir)
 
-    for image, image_id , o_test_img in zip(imgs_mask_test, imgs_id_test , o_imgs_test):
-        image = (image[:, :, 0] * 255.).astype(np.uint8)
-        imsave(os.path.join(pred_dir, image_id), image)
-        # Use original dim Image and Saving Overlay onto
-        overlay_img, _ = overlay_on_gray(color.rgb2gray(o_test_img),overlayGREEN=image.astype(bool))
+    for mask, image_id , o_test_img in zip(imgs_mask_test, imgs_id_test , o_imgs_test):
+        mask = (mask[:, :, 0] * 255.).astype(np.uint8)
+        imsave(os.path.join(pred_dir, image_id), mask)
+        # Use original dim mask and Saving Overlay onto
+
+        o_mask = resize(mask, (640,640)) 
+
+        overlay_img, _ = overlay_on_gray(color.rgb2gray(o_test_img),overlayGREEN=o_mask.astype(bool))
         imsave(os.path.join(overlay_dir, image_id), overlay_img)
 
 if __name__ == '__main__':

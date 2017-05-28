@@ -14,8 +14,8 @@ from data import load_train_data, load_test_data
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
-img_rows = 320
-img_cols = 320
+img_rows = 240
+img_cols = 240
 img_channels = 3
 
 smooth = 1.

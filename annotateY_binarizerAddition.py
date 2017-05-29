@@ -29,7 +29,7 @@ def show(img):
 
 def annotate_and_backup(DATAPATH , ANOTPATH):
 
-	for filename in os.listdir(DATAPATH)[:4]:
+	for filename in os.listdir(DATAPATH)[:2]:
 		print DATAPATH , filename
 
 		if not os.path.exists('../splitdata/trainY_multi'):
@@ -45,8 +45,9 @@ def annotate_and_backup(DATAPATH , ANOTPATH):
 
 		gt_all = navmask.astype(bool) + gt_one.astype(bool)
 
-		show(navmask)
-		show(gt_all)
+		print gt_all.shape
+		# show(navmask)
+		# show(gt_all)
 		
 
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
 	
 	DATAPATH1 = '../splitdata/trainY/'
 	DATAPATH2 = '../splitdata/testY/'
-	ANOTPATH = 	'../massiveRaw/full_static/'
+	ANOTPATH = 	'../massivedata/full_static/'
 
 	annotate_and_backup(DATAPATH1 , ANOTPATH)
 	annotate_and_backup(DATAPATH2 , ANOTPATH)

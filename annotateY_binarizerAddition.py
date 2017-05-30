@@ -1,5 +1,5 @@
 import os
-from skimage import io , color
+from skimage import io , color, measure
 import numpy as np 
 
 
@@ -29,33 +29,27 @@ def show(img):
 
 def annotate_and_backup(DATAPATH , ANOTPATH):
 
-	for filename in os.listdir(DATAPATH)[:2]:
+	for filename in os.listdir(DATAPATH)[:]:
 		print DATAPATH , filename
 
-		if not os.path.exists('../splitdata/trainY_multi'):
-			os.mkdir('../splitdata/trainY_multi')
+		if not os.path.exists(DATAPATH + '_multi'):
+			os.mkdir(DATAPATH+'_multi')
 
-		if not os.path.exists('../splitdata/testY_multi'):
-			os.mkdir('../splitdata/testY_multi')
-
-		nav = io.imread(ANOTPATH + filename, True)	
-		gt_one = io.imread(DATAPATH + filename, True)	
-
+		nav = io.imread(ANOTPATH + '/'+ filename, True)
+		gt_one = io.imread(DATAPATH +'/'+filename, True)
 		navmask = binarizer_nav_multiple(nav)
 
 		gt_all = navmask.astype(bool) + gt_one.astype(bool)
 
-		print gt_all.shape
-		# show(navmask)
-		# show(gt_all)
-		
+		io.imsave(DATAPATH+'_multi/'+filename, gt_all.astype(int)*255)
+		# show(gt_all
 
 
 if __name__ == '__main__':
 	
-	DATAPATH1 = '../splitdata/trainY/'
-	DATAPATH2 = '../splitdata/testY/'
-	ANOTPATH = 	'../massivedata/full_static/'
+	DATAPATH1 = '../splitdata/trainY'
+	DATAPATH2 = '../splitdata/testY'
+	ANOTPATH =  '../massivedata/full_static/'
 
 	annotate_and_backup(DATAPATH1 , ANOTPATH)
 	annotate_and_backup(DATAPATH2 , ANOTPATH)

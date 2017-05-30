@@ -14,8 +14,8 @@ from data import load_train_data, load_test_data
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
-img_rows = 240
-img_cols = 240
+img_rows = 160
+img_cols = 160
 img_channels = 3
 
 smooth = 1.
@@ -137,7 +137,7 @@ def train_and_predict():
     print('-'*30)
     print('Fitting model...')
     print('-'*30)
-    model.fit(imgs_train, imgs_mask_train, batch_size=16, epochs=25, verbose=1, shuffle=True,
+    model.fit(imgs_train, imgs_mask_train, batch_size=32, epochs=23, verbose=1, shuffle=True,
               validation_split=0.2,
               callbacks=[model_checkpoint,tbCallBack])
 
